@@ -4,13 +4,13 @@ import ibm_db
 
 app = Flask(__name__)
 
-dsn_hostname = "ba99a9e6-d59e-4883-8fc0-d6a8c9f7a08f.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud" 
-dsn_uid = "wpm42097"        
-dsn_pwd = "49qAzk08vjYmpRLb"      
+dsn_hostname = "19af6446-6171-4641-8aba-9dcff8e1b6ff.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud" 
+dsn_uid = "fvl78398"        
+dsn_pwd = "AkUG0UrmYFlf6I2V"      
 
 dsn_driver = "{IBM DB2 ODBC DRIVER}"
 dsn_database = "bludb"            
-dsn_port = "31321"                
+dsn_port = "30699"                
 dsn_protocol = "TCPIP"          
 dsn_security = "SSL"              
 
