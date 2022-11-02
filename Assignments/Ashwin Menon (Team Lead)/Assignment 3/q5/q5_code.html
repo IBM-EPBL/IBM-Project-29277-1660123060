@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        IBM Watson ChatBot
+    </title>
+    <script>
+        window.watsonAssistantChatOptions = {
+          integrationID: "d2f37864-9e2d-4099-bc2c-0707d4598b01", // The ID of this integration.
+          region: "eu-gb", // The region your integration is hosted in.
+          serviceInstanceID: "cbd9e810-9152-4d34-9372-adf1b4bbd0da", // The ID of your service instance.
+          onLoad: function(instance) { instance.render(); }
+        };
+        setTimeout(function(){
+          const t=document.createElement('script');
+          t.src="https://web-chat.global.assistant.watson.appdomain.cloud/versions/" + (window.watsonAssistantChatOptions.clientVersion || 'latest') + "/WatsonAssistantChatEntry.js";
+          document.head.appendChild(t);
+        });
+      </script>
+</head>
+<body>
+    <h1>ChatBot Page </h1>
+</body>
+</html>
