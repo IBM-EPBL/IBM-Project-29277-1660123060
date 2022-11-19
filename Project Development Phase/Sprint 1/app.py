@@ -5,13 +5,36 @@ from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'ceg1234'
+dsn_hostname = "98538591-7217-4024-b027-8baa776ffad1.c3n41cmd0nqnrk39u98g.databases.appdomain.cloud" 
+dsn_uid = "hgd72603"        
+dsn_pwd = "qUt0VtWTanLWm4bJ"      
+
+dsn_driver = "{IBM DB2 ODBC DRIVER}"
+dsn_database = "bludb"            
+dsn_port = "30875"                
+dsn_protocol = "TCPIP"          
+dsn_security = "SSL"              
+
+dsn = (
+    "DRIVER={0};"
+    "DATABASE={1};"
+    "HOSTNAME={2};"
+    "PORT={3};"
+    "PROTOCOL={4};"
+    "UID={5};"
+    "PWD={6};"
+    "SECURITY={7};"
+    "SSLServerCerificate=DigiCertGlobalRootCA.crt").format(dsn_driver, dsn_database, dsn_hostname, dsn_port, dsn_protocol, dsn_uid, dsn_pwd,dsn_security)
+
 try:
-    conn = ibm_db.connect("DATABASE=bludb;HOSTNAME=ba99a9e6-d59e-4883-8fc0-d6a8c9f7a08f.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud;PORT=31321;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=wpm42097;PWD=49qAzk08vjYmpRLb","","")
+    conn = ibm_db.connect(dsn,"","")
+    print(conn)
 except:
-    print("Unable to connect: ", ibm_db.conn_error())
+    print("Unable to connect: ", ibm_db.conn_errormsg())
 
 @app.route('/')
 def index():
+    print(conn)
     return render_template('home.html')
 
 #Register Form Class
