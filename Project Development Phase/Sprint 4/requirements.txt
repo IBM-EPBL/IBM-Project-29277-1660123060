@@ -1,0 +1,5 @@
+Flask
+Flask-WTF
+ibm_db
+sendgrid
+python-dotenv
