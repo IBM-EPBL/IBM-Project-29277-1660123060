@@ -123,7 +123,7 @@ def is_logged_in(f):
 @app.route('/dashboard')
 @is_logged_in 
 def dashboard():
-    sql = "SELECT * FROM stocks"
+    sql = "SELECT * FROM stock"
     stmt = ibm_db.exec_immediate(conn, sql)
     dictionary = ibm_db.fetch_assoc(stmt)
     stocks = []
@@ -151,21 +151,21 @@ def inventoryUpdate():
             field = request.form['input-field']
             value = request.form['input-value']
             print(item, field, value)
-            insert_sql = 'UPDATE stocks SET ' + field + "= ?" + " WHERE STOCK_NAME=?"
+            insert_sql = 'UPDATE stock SET ' + field + "= ?" + " WHERE STOCK_NAME=?"
             print(insert_sql)
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, value)
             ibm_db.bind_param(pstmt, 2, item)
             ibm_db.execute(pstmt)
             if field == 'PRICE_PER_QUANTITY' or field == 'QUANTITY':
-                insert_sql = 'SELECT * FROM stocks WHERE STOCK_NAME= ?'
+                insert_sql = 'SELECT * FROM stock WHERE STOCK_NAME= ?'
                 pstmt = ibm_db.prepare(conn, insert_sql)
                 ibm_db.bind_param(pstmt, 1, item)
                 ibm_db.execute(pstmt)
                 dictonary = ibm_db.fetch_assoc(pstmt)
                 print(dictonary)
                 total = dictonary['QUANTITY'] * dictonary['PRICE_PER_QUANTITY']
-                insert_sql = 'UPDATE stocks SET TOTAL_PRICE=? WHERE STOCK_NAME=?'
+                insert_sql = 'UPDATE stock SET TOTAL_PRICE=? WHERE STOCK_NAME=?'
                 pstmt = ibm_db.prepare(conn, insert_sql)
                 ibm_db.bind_param(pstmt, 1, total)
                 ibm_db.bind_param(pstmt, 2, item)
@@ -188,7 +188,7 @@ def addStocks():
             price = request.form['price']
             total = int(price) * int(quantity)
             print(total)
-            insert_sql = 'INSERT INTO stocks (STOCK_NAME,QUANTITY,PRICE_PER_QUANTITY,TOTAL_PRICE) VALUES (?,?,?,?)'
+            insert_sql = 'INSERT INTO stock (STOCK_NAME,QUANTITY,PRICE_PER_QUANTITY,TOTAL_PRICE) VALUES (?,?,?,?)'
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, item)
             ibm_db.bind_param(pstmt, 2, quantity)
@@ -212,7 +212,7 @@ def deleteStocks():
         print(request.form['item'])
         try:
             item = request.form['item']
-            insert_sql = 'DELETE FROM stocks WHERE STOCK_NAME=?'
+            insert_sql = 'DELETE FROM stock WHERE STOCK_NAME=?'
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, item)
             ibm_db.execute(pstmt)
