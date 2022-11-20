@@ -38,21 +38,44 @@ try:
 except:
     print("Unable to connect: ", ibm_db.conn_error())
 
+SUBJECT = "IBM Inventory Management Application"
 
-def sendgridmail(user,TEXT):
-    sg = sendgrid.SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
-    from_email = Email(os.getenv('SENDGRID_FROM_EMAIL')) 
-    to_email = To(user)  
-    subject = "Registered Successfully"
-    content = Content("text/plain",TEXT)
-    mail = Mail(from_email, to_email, subject, content)
+def sendgridmail(user,TEXT):    
+    try:
+        print("Helo")
+        content = Content("text/plain",TEXT)
+        message = Mail(
+            from_email=os.environ.get('SENDGRID_FROM_EMAIL'),
+            to_emails=user,
+            subject=SUBJECT,
+            html_content=content)
+        print("Hello1")
+        sg = sendgrid.SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        print("Hello2")
+        response = sg.send(message)
+        print("Hello3")
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
 
-    # Get a JSON-ready representation of the Mail object
-    mail_json = mail.get()
-    # Send an HTTP POST request to /mail/send
-    response = sg.client.mail.send.post(request_body=mail_json)
-    print(response.status_code)
-    print(response.headers)
+    except Exception as e:
+        print("Hello4")
+        print(e)
+
+# def sendgridmail(user,TEXT):
+#     sg = sendgrid.SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
+#     from_email = Email(os.getenv('SENDGRID_FROM_EMAIL')) 
+#     to_email = To(user)  
+#     subject = "Registered Successfully"
+#     content = Content("text/plain",TEXT)
+#     mail = Mail(from_email, to_email, subject, content)
+
+#     # Get a JSON-ready representation of the Mail object
+#     mail_json = mail.get()
+#     # Send an HTTP POST request to /mail/send
+#     response = sg.client.mail.send.post(request_body=mail_json)
+#     print(response.status_code)
+#     print(response.headers)
 
 
 @app.route('/')
@@ -85,15 +108,19 @@ def register():
         ibm_db.execute(prep_stmt)
         account = ibm_db.fetch_assoc(prep_stmt)
         print(account)
+        print(email,"HI1")
         if account:
+            print(email,"HI2")
             error = "Account already exists! Log in to continue !"
         else:
+            print(email,"HI3")
             insert_sql = "INSERT INTO users (email,username,password) values(?,?,?)"
             prep_stmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(prep_stmt, 1, email)
             ibm_db.bind_param(prep_stmt, 2, username)
             ibm_db.bind_param(prep_stmt, 3, password)
             ibm_db.execute(prep_stmt)
+            print(email,"HI")
             sendgridmail(email, "Registered Successfully! Thank you for registering with us")
             flash(" Registration successful. Log in to continue !")
                
@@ -247,9 +274,8 @@ def updateUser():
     if request.method == "POST":
         try:
             email = session['username']
-            field = request.form['input-field']
             value = request.form['input-value']
-            insert_sql = 'UPDATE users SET ' + field + '= ? WHERE username=?'
+            insert_sql = 'UPDATE users SET username= ? WHERE username=?'
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, value)
             ibm_db.bind_param(pstmt, 2, email)
@@ -260,8 +286,7 @@ def updateUser():
             msg = e
 
         finally:
-            if field == 'USERNAME':
-                session['username'] = value
+            session['username'] = value
             return redirect(url_for('profile'))
 
 
@@ -291,7 +316,7 @@ def updatePassword():
             msg = e
         finally:
            
-            return render_template('result.html')
+            return redirect(url_for('profile'))
 
 
 @app.route('/orders', methods=['POST', 'GET'])
@@ -402,7 +427,7 @@ def suppliers():
     print("dictionary")
     print(dictionary)
     while dictionary != False:
-        order_ids.append(dictionary['ORDER_ID'])
+        order_ids.append(dictionary['OID'])
         dictionary = ibm_db.fetch_assoc(stmt)
     unassigned_order_ids=None
 
@@ -441,7 +466,7 @@ def addSupplier():
             order_id = request.form.get('order-id-select')
             print(order_id)
             location = request.form['location']
-            insert_sql = 'INSERT INTO suppliers (SNAME,ORDER_ID,LOCATION) VALUES (?,?,?)'
+            insert_sql = 'INSERT INTO suppliers (SNAME,ORDER_ID,SLOCATION) VALUES (?,?,?)'
             pstmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(pstmt, 1, name)
             ibm_db.bind_param(pstmt, 2, order_id)
