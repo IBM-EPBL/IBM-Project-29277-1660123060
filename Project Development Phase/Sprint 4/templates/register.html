@@ -4,7 +4,7 @@
 {% from "includes/_formhelpers.html" import render_field %}
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-*{
+/* *{
 margin: 0;
 padding: 0;
 box-sizing: border-box;
@@ -108,13 +108,44 @@ font-size: 17px;
 .wrapper form .signup-link a{
 color: #16a085;
 text-decoration: none;
+} */
+.form-group{
+  line-height:0.8em;
 }
 form .signup-link a:hover{
 text-decoration: underline;
 }
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins',sans-serif;
+}
+body{
+  background: #bcfcef;
+  overflow: hidden;
+}
+::selection{
+  background: rgba(65, 251, 214, 0.3);
+}
+.divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+.h-custom {
+height: 100%;
+}
+}
 </style>
 <body>
-  <div class="container">
+  <!-- <div class="container">
     <div class="wrapper">
       <div class="title"><span>Register</span></div>
       <form method="POST" action="">
@@ -135,6 +166,55 @@ text-decoration: underline;
         </div>
         <p><button type="submit" class="btn btn-primary" value="Submit">Submit</button></p>
       </form>
+    </div>
+  </div> -->
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <form method="POST" action="">
+          <div class="d-flex flex-column align-items-center justify-content-center justify-content-lg-start">
+           
+
+          <!-- Email input -->
+          <!-- <div class="d-flex flex-column form-outline mb-4">
+            <label>Username</label>
+            <input type="text" placeholder="Username" required name="username" value={{request.form.username}}>
+          </div> -->
+
+          <!-- Password input -->
+          <!-- <div class="d-flex flex-column form-outline mb-3">
+            <label>Password</label>
+            <input type="password" placeholder="Password" required name="password" value={{request.form.password}} required>
+          </div> -->
+          <div class="form-group">
+            {{render_field(form.name, class_="form-control")}}
+          </div>
+          <div class="form-group">
+            {{render_field(form.email, class_="form-control")}}
+          </div>
+          <div class="form-group">
+            {{render_field(form.username, class_="form-control")}}
+          </div>
+          <div class="form-group">
+              {{render_field(form.password, class_="form-control")}}
+          </div>
+          <div class="form-group">
+              {{render_field(form.confirm, class_="form-control")}}
+          </div>
+
+          <div class="text-center text-lg-start mt-2 pt-2">
+            <button type="submit" class="btn btn-primary btn-md" value="Submit"
+              style="padding-left: 1rem; padding-right: 1rem;">Submit</button>
+            <p class="small fw-bold mt-2 pt-1 mb-0">Already have an account? <a href="/login"
+                class="link-danger">Login</a></p>
+          </div>
+
+        </form>
+      </div>
     </div>
   </div>
 

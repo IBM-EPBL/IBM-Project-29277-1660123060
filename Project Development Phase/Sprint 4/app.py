@@ -97,7 +97,6 @@ class RegisterForm(Form):
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
-        name = form.name.data
         email = form.email.data
         username = form.username.data
         password = str(form.password.data)
@@ -108,19 +107,15 @@ def register():
         ibm_db.execute(prep_stmt)
         account = ibm_db.fetch_assoc(prep_stmt)
         print(account)
-        print(email,"HI1")
         if account:
-            print(email,"HI2")
             error = "Account already exists! Log in to continue !"
         else:
-            print(email,"HI3")
             insert_sql = "INSERT INTO users (email,username,password) values(?,?,?)"
             prep_stmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(prep_stmt, 1, email)
             ibm_db.bind_param(prep_stmt, 2, username)
             ibm_db.bind_param(prep_stmt, 3, password)
             ibm_db.execute(prep_stmt)
-            print(email,"HI")
             sendgridmail(email, "Registered Successfully! Thank you for registering with us")
             flash(" Registration successful. Log in to continue !")
                
