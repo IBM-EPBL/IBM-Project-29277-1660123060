@@ -3,7 +3,8 @@
 @import 'https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700';
 body {
   font-family: 'Poppins', sans-serif;
-  background: #fafafa;
+  /* background: #fafafa; */
+  background: #e8f4f6;
 }
 
 p {
@@ -13,6 +14,10 @@ p {
   line-height: 1.7em;
   color: #999;
 }
+
+/* .bg-home{
+ 
+} */
 
 /* a,
 a:hover,
@@ -191,7 +196,7 @@ a.article:hover {
 }
 
 .fl-table {
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 16px;
   font-weight: normal;
   border: none;
@@ -215,7 +220,7 @@ a.article:hover {
 
 .fl-table thead th {
   color: #ffffff;
-  background: #68716e !important ;
+  background: #01555b !important ;
 }
 
 .fl-table thead:nth-child(odd) {
@@ -224,7 +229,7 @@ a.article:hover {
 }
 
 .fl-table tr:nth-child(even) {
-  background: #f8f8f8;
+  background: #d4f5ee;
 }
 .custom-label {
   font-size: 18px;
@@ -357,4 +362,9 @@ a.article:hover {
 
 .red-button {
   background-color: rgb(186, 13, 13);
+}
+
+.card{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-radius: 15px;
 }

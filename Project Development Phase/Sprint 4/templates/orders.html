@@ -1,10 +1,70 @@
 {% extends 'dash_layout.html '%} {% block head %}
 <title>Orders</title>
 {% endblock%} {%block body%}
-<h2>Orders</h2>
+<h3>Orders</h3>
 
 {% include 'includes/table.html' %}
-<div class="forms-wrapper">
+<div class="row">
+  <div class="col-sm-6 col-lg-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Create Order</h4>
+        <form action="{{url_for('createOrder') }}" method="post">
+          <div class="field d-flex flex-column align-items-start">
+            <label class="custom-label" for="item">Enter Stock ID</label>
+            <input class="text-inputs" type="text" name="stock_id" placeholder="1" />
+          </div>
+          <div class="field d-flex flex-column align-items-start">
+            <label class="custom-label" for="item">Enter Quantity</label>
+            <input class="text-inputs" type="number" name="quantity" placeholder="0" />
+          </div>
+          <button class="mt-3 submit-button">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6  col-lg-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Update Order</h4>        
+        <form action="{{url_for('updateOrder') }}" method="post">
+          <div class="field d-flex flex-column align-items-start">
+            <label class="custom-label" for="item">Enter Order ID</label>
+            <input class="text-inputs" name="item" type="number" placeholder="1" />
+          </div>
+          <div class="field d-flex flex-column align-items-start">
+            <label for="custom-label" for="input-field">Choose a field - </label>
+            <select name="input-field" id="field">
+              <option value="STOCK_ID">STOCKS_ID</option>
+              <option value="QUANTITY">QUANTITY</option>
+              <option value="PRICE">PRICE</option>
+            </select>
+          </div>
+          <div class="field d-flex flex-column align-items-start">
+            <label class="custom-label" for="input-value">Enter Value</label>
+            <input class="text-inputs" type="text" name="input-value" placeholder="0"/>
+          </div>
+          <button class="mt-3 submit-button">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6  col-lg-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Cancel Order</h4>
+        <form action="{{url_for('cancelOrder') }}" method="post">
+          <div class="field d-flex flex-column align-items-start">
+            <label class="custom-label" for="item">Enter Order ID</label>
+            <input class="text-inputs" name="order_id" type="number" placeholder="1" />
+          </div>
+          <button class="mt-3 submit-button red-button">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="forms-wrapper">
   <form action="{{url_for('createOrder') }}" method="post">
     <h3>Create Order</h3>
     <div class="field">
@@ -46,5 +106,5 @@
     </div>
     <button class="submit-button red-button">Cancel</button>
   </form>
-</div>
+</div> -->
 {% endblock%}
