@@ -42,27 +42,21 @@ height: 100%;
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
         <form method="POST" action="">
           <div class="d-flex flex-column align-items-center justify-content-center justify-content-lg-start">
-           
+            <div class="d-flex flex-column form-outline mb-4">
+              <label>Username</label>
+              <input type="text" placeholder="Username" required name="username" value={{request.form.username}}>
+            </div>
+            <div class="d-flex flex-column form-outline mb-3">
+              <label>Password</label>
+              <input type="password" placeholder="Password" required name="password" value={{request.form.password}} required>
+            </div>
 
-          <!-- Email input -->
-          <div class="d-flex flex-column form-outline mb-4">
-            <label>Username</label>
-            <input type="text" placeholder="Username" required name="username" value={{request.form.username}}>
+            <div class="text-center text-lg-start mt-2 pt-2">
+              <input type="submit" class="btn btn-primary btn-md" value="Login"
+                style="padding-left: 1rem; padding-right: 1rem;"/>
+              <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/register"
+                  class="link-danger">Register</a></p>
           </div>
-
-          <!-- Password input -->
-          <div class="d-flex flex-column form-outline mb-3">
-            <label>Password</label>
-            <input type="password" placeholder="Password" required name="password" value={{request.form.password}} required>
-          </div>
-
-          <div class="text-center text-lg-start mt-2 pt-2">
-            <input type="submit" class="btn btn-primary btn-md" value="Login"
-              style="padding-left: 1rem; padding-right: 1rem;"/>
-            <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/register"
-                class="link-danger">Register</a></p>
-          </div>
-
         </form>
       </div>
     </div>
