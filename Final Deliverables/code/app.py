@@ -62,21 +62,6 @@ def sendgridmail(user,TEXT):
         print("Hello4")
         print(e)
 
-# def sendgridmail(user,TEXT):
-#     sg = sendgrid.SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
-#     from_email = Email(os.getenv('SENDGRID_FROM_EMAIL')) 
-#     to_email = To(user)  
-#     subject = "Registered Successfully"
-#     content = Content("text/plain",TEXT)
-#     mail = Mail(from_email, to_email, subject, content)
-
-#     # Get a JSON-ready representation of the Mail object
-#     mail_json = mail.get()
-#     # Send an HTTP POST request to /mail/send
-#     response = sg.client.mail.send.post(request_body=mail_json)
-#     print(response.status_code)
-#     print(response.headers)
-
 
 @app.route('/')
 def index():
@@ -92,12 +77,12 @@ class RegisterForm(Form):
         validators.EqualTo('confirm', message='Passwords do not match')
     ])
     confirm = PasswordField('Confirm Password')
-#user register
+
+#Register new User
 @app.route('/register', methods=['GET','POST'])
 def register():
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
-        name = form.name.data
         email = form.email.data
         username = form.username.data
         password = str(form.password.data)
@@ -108,27 +93,22 @@ def register():
         ibm_db.execute(prep_stmt)
         account = ibm_db.fetch_assoc(prep_stmt)
         print(account)
-        print(email,"HI1")
         if account:
-            print(email,"HI2")
             error = "Account already exists! Log in to continue !"
         else:
-            print(email,"HI3")
             insert_sql = "INSERT INTO users (email,username,password) values(?,?,?)"
             prep_stmt = ibm_db.prepare(conn, insert_sql)
             ibm_db.bind_param(prep_stmt, 1, email)
             ibm_db.bind_param(prep_stmt, 2, username)
             ibm_db.bind_param(prep_stmt, 3, password)
             ibm_db.execute(prep_stmt)
-            print(email,"HI")
             sendgridmail(email, "Registered Successfully! Thank you for registering with us")
             flash(" Registration successful. Log in to continue !")
                
-        #when registration is successful redirect to home
         return redirect(url_for('login'))
     return render_template('register.html', form = form)
 
-#User login
+#User Login
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -136,7 +116,6 @@ def login():
     else:
         error = None
         account = None
-        #Get form fields
         username = request.form['username']
         password = request.form['password']
         print(username, password)
@@ -158,7 +137,7 @@ def login():
         return render_template('login.html', error=error)
 
 
-#Is Logged In
+#Check for if user is logged in
 def is_logged_in(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -169,6 +148,7 @@ def is_logged_in(f):
             return redirect(url_for('login'))
     return wrap
 
+#Main Dashboard Page
 @app.route('/dashboard')
 @is_logged_in 
 def dashboard():
@@ -183,6 +163,7 @@ def dashboard():
         dictionary = ibm_db.fetch_assoc(stmt)
     return render_template('dashboard.html',headings=headings, data=stocks)
 
+#User Logout
 @app.route('/logout')
 @is_logged_in
 def logout():
@@ -190,6 +171,7 @@ def logout():
     flash("Logged out successfully", "success")
     return redirect(url_for('login'))
 
+#Update Stock Inventory
 @app.route('/inventoryUpdate', methods=['POST'])
 @is_logged_in
 def inventoryUpdate():
@@ -225,6 +207,7 @@ def inventoryUpdate():
             
             return redirect(url_for('dashboard'))
 
+# Add to Stock Inventory
 @app.route('/addstocks', methods=['POST'])
 @is_logged_in
 def addStocks():
@@ -250,6 +233,7 @@ def addStocks():
 
             return redirect(url_for('dashboard'))
 
+#Delete from Stock Inventory
 @app.route('/deletestocks', methods=['POST'])
 @is_logged_in
 def deleteStocks():
@@ -267,7 +251,7 @@ def deleteStocks():
         finally:
             return redirect(url_for('dashboard'))
 
-
+#Update Username
 @app.route('/update-user', methods=['POST', 'GET'])
 @is_logged_in
 def updateUser():
@@ -289,7 +273,7 @@ def updateUser():
             session['username'] = value
             return redirect(url_for('profile'))
 
-
+#Update Password
 @app.route('/update-password', methods=['POST', 'GET'])
 @is_logged_in
 def updatePassword():
@@ -318,7 +302,7 @@ def updatePassword():
            
             return redirect(url_for('profile'))
 
-
+#Get Orders
 @app.route('/orders', methods=['POST', 'GET'])
 @is_logged_in
 def orders():
@@ -332,7 +316,7 @@ def orders():
         dictionary = ibm_db.fetch_assoc(stmt)
     return render_template("orders.html", headings=headings, data=orders)
 
-
+#Create new Order
 @app.route('/createOrder', methods=['POST'])
 @is_logged_in
 def createOrder():
@@ -367,7 +351,7 @@ def createOrder():
         finally:
             return redirect(url_for('orders'))
 
-
+#Update Order
 @app.route('/updateOrder', methods=['POST'])
 @is_logged_in
 def updateOrder():
@@ -387,7 +371,7 @@ def updateOrder():
         finally:
             return redirect(url_for('orders'))
 
-
+#Cancel Order
 @app.route('/cancelOrder', methods=['POST'])
 @is_logged_in
 def cancelOrder():
@@ -404,7 +388,7 @@ def cancelOrder():
         finally:
             return redirect(url_for('orders'))
 
-
+#Get Suppliers
 @app.route('/suppliers', methods=['POST', 'GET'])
 @is_logged_in
 def suppliers():
@@ -419,7 +403,6 @@ def suppliers():
         orders_assigned.append(dictionary['ORDER_ID'])
         dictionary = ibm_db.fetch_assoc(stmt)
 
-# get order ids from orders table and identify unassigned order ids
     sql = "SELECT OID FROM orders"
     stmt = ibm_db.exec_immediate(conn, sql)
     dictionary = ibm_db.fetch_assoc(stmt)
@@ -430,11 +413,9 @@ def suppliers():
         order_ids.append(dictionary['OID'])
         dictionary = ibm_db.fetch_assoc(stmt)
     unassigned_order_ids=None
-
-    # unassigned_order_ids = set(order_ids) - set(orders_assigned)
     return render_template("suppliers.html", headings=headings, data=suppliers, order_ids=order_ids)
 
-
+#Update Supplier
 @app.route('/updatesupplier', methods=['POST'])
 @is_logged_in
 def UpdateSupplier():
@@ -456,7 +437,7 @@ def UpdateSupplier():
         finally:
             return redirect(url_for('suppliers'))
 
-
+# Add new Supplier
 @app.route('/addsupplier', methods=['POST'])
 @is_logged_in
 def addSupplier():
@@ -479,7 +460,7 @@ def addSupplier():
         finally:
             return redirect(url_for('suppliers'))
 
-
+#Delete Supplier
 @app.route('/deletesupplier', methods=['POST'])
 @is_logged_in
 def deleteSupplier():
@@ -496,7 +477,7 @@ def deleteSupplier():
         finally:
             return redirect(url_for('suppliers'))
 
-
+#Get User's Profile
 @app.route('/profile', methods=['POST', 'GET'])
 @is_logged_in
 def profile():
@@ -512,5 +493,4 @@ def profile():
             return render_template("profile.html", data=dictionary)
 
 if __name__ == '__main__':
-    
     app.run(host="0.0.0.0",port=5000)
