@@ -302,7 +302,7 @@ def updatePassword():
            
             return redirect(url_for('profile'))
 
-#Get Orders
+#Get All Orders
 @app.route('/orders', methods=['POST', 'GET'])
 @is_logged_in
 def orders():
@@ -388,7 +388,7 @@ def cancelOrder():
         finally:
             return redirect(url_for('orders'))
 
-#Get Suppliers
+#Get All Suppliers
 @app.route('/suppliers', methods=['POST', 'GET'])
 @is_logged_in
 def suppliers():
